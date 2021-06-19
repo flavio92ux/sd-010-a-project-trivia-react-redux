@@ -1,19 +1,32 @@
 import React, { Component } from 'react';
 
 class Timer extends Component {
+  constructor() {
+    super();
+    this.state = {
+      time: 30,
+    };
+    this.timer = this.timer.bind(this);
+  }
+
+  componentDidMount() {
+    this.timer();
+  }
+
   timer() {
     const ONE_SECOND = 1000;
-    const timer = setInterval(() => {
-      const time = 30;
-      return time - 1;
+    setInterval(() => {
+      const { time } = this.state;
+      this.setState({
+        time: time - 1,
+      });
     }, ONE_SECOND);
-
-    return timer;
   }
 
   render() {
+    const { time } = this.state;
     return (
-      <div>{this.timer()}</div>
+      <div>{time}</div>
     );
   }
 }
