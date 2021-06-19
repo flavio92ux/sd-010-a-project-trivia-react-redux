@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getInfo, getTokenThunk } from '../actions';
+import { getInfo, getQuestionsThunk, getTokenThunk } from '../actions';
 
 class Login extends Component {
   constructor(props) {
@@ -28,10 +28,11 @@ class Login extends Component {
   }
 
   handleClick() {
-    const { token, sendInfoRedux } = this.props;
+    const { token, sendInfoRedux, sendQuestionsToRedux } = this.props;
     const { name, email } = this.state;
     localStorage.setItem('token', token);
     sendInfoRedux(name, email);
+    sendQuestionsToRedux(token);
   }
 
   handleChange({ target }) {
@@ -123,6 +124,7 @@ Login.propTypes = {
   token: PropTypes.string.isRequired,
   getToken: PropTypes.func.isRequired,
   sendInfoRedux: PropTypes.func.isRequired,
+  sendQuestionsToRedux: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -132,6 +134,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   getToken: () => dispatch(getTokenThunk()),
   sendInfoRedux: (name, email) => dispatch(getInfo(name, email)),
+  sendQuestionsToRedux: (token) => dispatch(getQuestionsThunk(token)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
