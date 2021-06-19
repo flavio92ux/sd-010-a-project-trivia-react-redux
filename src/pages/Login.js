@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { getTokenThunk } from '../actions';
 
 class Login extends Component {
   constructor(props) {
@@ -11,6 +15,21 @@ class Login extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.checkInputs = this.checkInputs.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentDidMount() {
+    this.requestToken();
+  }
+
+  async requestToken() {
+    const { getToken } = this.props;
+    getToken();
+  }
+
+  handleClick() {
+    const { token } = this.props;
+    localStorage.setItem('token', token);
   }
 
   handleChange({ target }) {
@@ -35,22 +54,20 @@ class Login extends Component {
   render() {
     return (
       <form className="g-3">
-        <div className="col-auto">
-          <label
-            className="form-label"
-            htmlFor="email"
-          >
-            E-mail
-            <input
-              data-testid="input-gravatar-email"
-              className="form-control"
-              type="email"
-              name="email"
-              placeholder="E-mail"
-              onChange={ this.handleChange }
-            />
-          </label>
-        </div>
+        <label
+          className="form-label"
+          htmlFor="email"
+        >
+          E-mail
+          <input
+            data-testid="input-gravatar-email"
+            className="form-control"
+            type="email"
+            name="email"
+            placeholder="E-mail"
+            onChange={ this.handleChange }
+          />
+        </label>
         <div className="col-auto">
           <label
             className="form-label"
@@ -68,18 +85,34 @@ class Login extends Component {
           </label>
         </div>
         <div className="col-auto">
-          <button
-            data-testid="btn-play"
-            className="btn btn-primary mb-3"
-            type="submit"
-            disabled={ this.checkInputs() }
-          >
-            Jogar
-          </button>
+          <Link to="/tela-do-jogo">
+            <button
+              data-testid="btn-play"
+              className="btn btn-primary mb-3"
+              type="button"
+              disabled={ this.checkInputs() }
+              onClick={ this.handleClick }
+            >
+              Jogar
+            </button>
+          </Link>
         </div>
       </form>
     );
   }
 }
 
-export default Login;
+Login.propTypes = {
+  token: PropTypes.string.isRequired,
+  getToken: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  token: state.login.token,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getToken: () => dispatch(getTokenThunk()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
