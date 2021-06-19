@@ -51,6 +51,33 @@ class Login extends Component {
     return !(name.length > 0 && this.validateEmail(email));
   }
 
+  renderButtons() {
+    return (
+      <div className="col-xs-3">
+        <Link to="/tela-do-jogo">
+          <button
+            data-testid="btn-play"
+            className="btn btn-outline-primary mr-3"
+            type="button"
+            disabled={ this.checkInputs() }
+            onClick={ this.handleClick }
+          >
+            Jogar
+          </button>
+        </Link>
+        <Link to="/settings">
+          <button
+            data-testid="btn-settings"
+            className="btn btn-outline-primary btn-block"
+            type="button"
+          >
+            Configs
+          </button>
+        </Link>
+      </div>
+    );
+  }
+
   render() {
     return (
       <form className="g-3">
@@ -83,19 +110,7 @@ class Login extends Component {
               onChange={ this.handleChange }
             />
           </label>
-        </div>
-        <div className="col-auto">
-          <Link to="/tela-do-jogo">
-            <button
-              data-testid="btn-play"
-              className="btn btn-primary mb-3"
-              type="button"
-              disabled={ this.checkInputs() }
-              onClick={ this.handleClick }
-            >
-              Jogar
-            </button>
-          </Link>
+          {this.renderButtons()}
         </div>
       </form>
     );
