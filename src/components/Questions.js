@@ -7,8 +7,10 @@ class Questions extends Component {
     super();
     this.state = {
       counter: 0,
+      clicked: false,
     };
     this.getQuestions = this.getQuestions.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   getQuestions() {
@@ -30,10 +32,16 @@ class Questions extends Component {
     return this.renderElements(newAnswers, object);
   }
 
+  handleClick() {
+    this.setState({
+      clicked: true,
+    });
+  }
+
   renderElements(newAnswers, object) {
     if (object.length === 0) return;
     const { category, question } = object;
-    console.log(correct_answer);
+    const { clicked } = this.state;
     return (
       <div>
         <p data-testid="question-category">{category}</p>
@@ -44,6 +52,8 @@ class Questions extends Component {
               <button
                 type="button"
                 data-testid="correct-answer"
+                onClick={ this.handleClick }
+                className={ clicked && 'correct-answer' }
               >
                 {answer}
               </button>
@@ -54,6 +64,8 @@ class Questions extends Component {
               key={ index }
               type="button"
               data-testid={ `wrong-answer-${index}` }
+              onClick={ this.handleClick }
+              className={ clicked && 'wrong-answer' }
             >
               {answer}
             </button>
