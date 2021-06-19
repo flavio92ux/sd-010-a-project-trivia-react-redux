@@ -19,8 +19,48 @@ class Questions extends Component {
       const incorrectAnswers = object.incorrect_answers;
       const correctAnswers = object.correct_answer;
       const answers = [...incorrectAnswers, correctAnswers];
-      console.log(answers);
+      return this.sortAnsewrs(answers, object);
     }
+  }
+
+  sortAnsewrs(answers, object) {
+    const PARAM_1 = 0.5;
+    const PARAM_2 = -1;
+    const newAnswers = answers.sort(() => (Math.random() > PARAM_1 ? 1 : PARAM_2));
+    return this.renderElements(newAnswers, object);
+  }
+
+  renderElements(newAnswers, object) {
+    if (object.length === 0) return;
+    const { category, question } = object;
+    console.log(correct_answer);
+    return (
+      <div>
+        <p data-testid="question-category">{category}</p>
+        <p data-testid="question-text">{question}</p>
+        {newAnswers.map((answer, index) => {
+          if (answer === object.correct_answer) {
+            return (
+              <button
+                type="button"
+                data-testid="correct-answer"
+              >
+                {answer}
+              </button>
+            );
+          }
+          return (
+            <button
+              key={ index }
+              type="button"
+              data-testid={ `wrong-answer-${index}` }
+            >
+              {answer}
+            </button>
+          );
+        })}
+      </div>
+    );
   }
 
   render() {
@@ -33,10 +73,7 @@ class Questions extends Component {
 }
 
 Questions.propTypes = {
-  results: PropTypes.arrayOf(PropTypes.shape({
-    start: PropTypes.string,
-    end: PropTypes.string,
-  })).isRequired,
+  results: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = ({ questions: { results } }) => ({
