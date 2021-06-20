@@ -32,9 +32,10 @@ class Questions extends Component {
     return this.renderElements(newAnswers, object);
   }
 
-  handleClick() {
+  handleClick(event) {
     const { clickedState } = this.props;
     clickedState(true);
+    console.log(event.target);
   }
 
   renderElements(newAnswers, object) {
