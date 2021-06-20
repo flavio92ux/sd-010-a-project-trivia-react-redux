@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { clicked } from '../actions';
+import { clicked, setScore, stopTime } from '../actions';
 
 class Questions extends Component {
   constructor() {
@@ -12,24 +12,41 @@ class Questions extends Component {
     this.getQuestions = this.getQuestions.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.sortAnsewrs = this.sortAnsewrs.bind(this);
+    this.setLocalStorage = this.setLocalStorage.bind(this);
+  }
+
+  setLocalStorage() {
+    const { name, matches, score, email } = this.props;
+
+    localStorage.setItem('state', {
+      name,
+      assertions: matches,
+      score,
+      gravatarEmail: email,
+    });
   }
 
   setScore(difficulty) {
-    let difficultyScore = 0;
-    const DIFFICULT_EASY = 11;
-    const DIFFICULT_MEDIUM = 12;
-    const DIFFICULT_HARD = 13;
+    const { time, dispatchScore } = this.props;
+    const EASY = 1;
+    const MEDIUM = 2;
+    const HARD = 3;
+    const CONSTANT = 10;
+    let score = 0;
 
     switch (difficulty) {
     case 'easy':
-      difficultyScore = DIFFICULT_EASY;
+      score = CONSTANT + (EASY * time);
       break;
     case 'medium':
-      difficultyScore = DIFFICULT_MEDIUM;
+      score = CONSTANT + (MEDIUM * time);
       break;
     default:
-      difficultyScore = DIFFICULT_HARD;
+      score = CONSTANT + (HARD * time);
     }
+    dispatchScore(score);
+
+    this.setLocalStorage();
   }
 
   getQuestions() {
@@ -52,7 +69,8 @@ class Questions extends Component {
   }
 
   handleClick({ target }, difficulty) {
-    const { clickedState } = this.props;
+    const { clickedState, timerStop } = this.props;
+    timerStop(true);
     clickedState(true);
     if (target.name === 'correct') {
       this.setScore(difficulty);
@@ -115,15 +133,29 @@ Questions.propTypes = {
   results: PropTypes.string.isRequired,
   clickedState: PropTypes.func.isRequired,
   click: PropTypes.bool.isRequired,
+  time: PropTypes.number.isRequired,
+  timerStop: PropTypes.func.isRequired,
+  dispatchScore: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
+  email: PropTypes.string.isRequired,
+  matches: PropTypes.number.isRequired,
 };
 
-const mapStateToProps = ({ questions: { results, click } }) => ({
-  results,
-  click,
+const mapStateToProps = (state) => ({
+  results: state.questions.results,
+  click: state.questions.click,
+  time: state.questions.time,
+  matches: state.questions.matches,
+  score: state.questions.score,
+  name: state.login.name,
+  email: state.login.email,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   clickedState: (bool) => dispatch(clicked(bool)),
+  timerStop: (bool) => dispatch(stopTime(bool)),
+  dispatchScore: (score) => dispatch(setScore(score)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions);

@@ -7,6 +7,8 @@ export const GET_QUESTIONS = 'GET_QUESTIONS';
 export const ERROR_REQUEST = 'ERROR_REQUEST';
 export const CLICKED = 'CLICKED';
 export const TIMER = 'TIMER';
+export const STOP_TIME = 'STOP_TIME';
+export const SET_SCORE = 'SET_SCORE';
 
 export const getTokenSucess = (token) => ({
   type: GET_TOKEN,
@@ -41,6 +43,16 @@ export const clicked = (payload) => ({
 export const timer = (payload) => ({
   type: TIMER,
   payload,
+});
+
+export const stopTime = (payload) => ({
+  type: STOP_TIME,
+  payload,
+});
+
+export const setScore = (score) => ({
+  type: SET_SCORE,
+  score,
 });
 
 export const getTokenThunk = () => (dispatch) => {

@@ -3,6 +3,8 @@ import {
   ERROR_REQUEST,
   CLICKED,
   TIMER,
+  STOP_TIME,
+  SET_SCORE,
 } from '../actions/index';
 
 const INITIAL_STATE = {
@@ -10,6 +12,9 @@ const INITIAL_STATE = {
   results: [],
   click: false,
   time: 30,
+  timeStop: false,
+  score: 0,
+  matches: 0,
 };
 
 function login(state = INITIAL_STATE, action) {
@@ -35,6 +40,17 @@ function login(state = INITIAL_STATE, action) {
       ...state,
       time: action.payload,
 
+    });
+  case STOP_TIME:
+    return ({
+      ...state,
+      timeStop: action.payload,
+    });
+  case SET_SCORE:
+    return ({
+      ...state,
+      score: state.score + action.score,
+      matches: state.matches + 1,
     });
   default:
     return state;
