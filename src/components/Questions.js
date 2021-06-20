@@ -11,6 +11,25 @@ class Questions extends Component {
     };
     this.getQuestions = this.getQuestions.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.sortAnsewrs = this.sortAnsewrs.bind(this);
+  }
+
+  setScore(difficulty) {
+    let difficultyScore = 0;
+    const DIFFICULT_EASY = 11;
+    const DIFFICULT_MEDIUM = 12;
+    const DIFFICULT_HARD = 13;
+
+    switch (difficulty) {
+    case 'easy':
+      difficultyScore = DIFFICULT_EASY;
+      break;
+    case 'medium':
+      difficultyScore = DIFFICULT_MEDIUM;
+      break;
+    default:
+      difficultyScore = DIFFICULT_HARD;
+    }
   }
 
   getQuestions() {
@@ -32,16 +51,18 @@ class Questions extends Component {
     return this.renderElements(newAnswers, object);
   }
 
-  handleClick(event) {
+  handleClick({ target }, difficulty) {
     const { clickedState } = this.props;
     clickedState(true);
-    console.log(event.target);
+    if (target.name === 'correct') {
+      this.setScore(difficulty);
+    }
   }
 
   renderElements(newAnswers, object) {
     if (object.length === 0) return;
     const { click } = this.props;
-    const { category, question } = object;
+    const { category, question, difficulty } = object;
     const { time } = this.state;
     return (
       <div>
@@ -53,8 +74,9 @@ class Questions extends Component {
             return (
               <button
                 type="button"
+                name="correct"
                 data-testid="correct-answer"
-                onClick={ this.handleClick }
+                onClick={ (e) => this.handleClick(e, difficulty) }
                 className={ click && 'correct-answer' }
                 disabled={ click }
               >
@@ -66,8 +88,9 @@ class Questions extends Component {
             <button
               key={ index }
               type="button"
+              name="incorrect"
               data-testid={ `wrong-answer-${index}` }
-              onClick={ this.handleClick }
+              onClick={ (e) => this.handleClick(e, difficulty) }
               className={ click && 'wrong-answer' }
               disabled={ click }
             >
