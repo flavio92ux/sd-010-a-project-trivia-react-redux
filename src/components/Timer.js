@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { clicked } from '../actions';
 
 class Timer extends Component {
   constructor() {
     super();
     this.state = {
-      time: 5,
+      time: 30,
     };
     this.timer = this.timer.bind(this);
   }
@@ -14,6 +17,7 @@ class Timer extends Component {
   }
 
   timer() {
+    const { clickedState } = this.props;
     const ONE_SECOND = 1000;
     const timer = setInterval(() => {
       const { time } = this.state;
@@ -22,6 +26,7 @@ class Timer extends Component {
           time: time - 1,
         });
       } else {
+        clickedState(true);
         clearInterval(timer);
       }
     }, ONE_SECOND);
@@ -35,4 +40,12 @@ class Timer extends Component {
   }
 }
 
-export default Timer;
+Timer.propTypes = {
+  clickedState: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  clickedState: (bool) => dispatch(clicked(bool)),
+});
+
+export default connect(null, mapDispatchToProps)(Timer);

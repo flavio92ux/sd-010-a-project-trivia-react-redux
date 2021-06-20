@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { clicked } from '../actions';
 
 class Questions extends Component {
   constructor() {
     super();
     this.state = {
       counter: 0,
-      clicked: false,
     };
     this.getQuestions = this.getQuestions.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -33,16 +33,15 @@ class Questions extends Component {
   }
 
   handleClick() {
-    this.setState({
-      clicked: true,
-      disabled: true,
-    });
+    const { clickedState } = this.props;
+    clickedState(true);
   }
 
   renderElements(newAnswers, object) {
     if (object.length === 0) return;
+    const { click } = this.props;
     const { category, question } = object;
-    const { clicked, time, disabled } = this.state;
+    const { time } = this.state;
     return (
       <div>
         <p>{time}</p>
@@ -55,8 +54,8 @@ class Questions extends Component {
                 type="button"
                 data-testid="correct-answer"
                 onClick={ this.handleClick }
-                className={ clicked && 'correct-answer' }
-                disabled={ disabled }
+                className={ click && 'correct-answer' }
+                disabled={ click }
               >
                 {answer}
               </button>
@@ -68,8 +67,8 @@ class Questions extends Component {
               type="button"
               data-testid={ `wrong-answer-${index}` }
               onClick={ this.handleClick }
-              className={ clicked && 'wrong-answer' }
-              disabled={ disabled }
+              className={ click && 'wrong-answer' }
+              disabled={ click }
             >
               {answer}
             </button>
@@ -90,10 +89,17 @@ class Questions extends Component {
 
 Questions.propTypes = {
   results: PropTypes.string.isRequired,
+  clickedState: PropTypes.func.isRequired,
+  click: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({ questions: { results } }) => ({
+const mapStateToProps = ({ questions: { results, click } }) => ({
   results,
+  click,
 });
 
-export default connect(mapStateToProps)(Questions);
+const mapDispatchToProps = (dispatch) => ({
+  clickedState: (bool) => dispatch(clicked(bool)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Questions);
