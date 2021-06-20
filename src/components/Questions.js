@@ -35,15 +35,17 @@ class Questions extends Component {
   handleClick() {
     this.setState({
       clicked: true,
+      disabled: true,
     });
   }
 
   renderElements(newAnswers, object) {
     if (object.length === 0) return;
     const { category, question } = object;
-    const { clicked } = this.state;
+    const { clicked, time, disabled } = this.state;
     return (
       <div>
+        <p>{time}</p>
         <p data-testid="question-category">{category}</p>
         <p data-testid="question-text">{question}</p>
         {newAnswers.map((answer, index) => {
@@ -54,6 +56,7 @@ class Questions extends Component {
                 data-testid="correct-answer"
                 onClick={ this.handleClick }
                 className={ clicked && 'correct-answer' }
+                disabled={ disabled }
               >
                 {answer}
               </button>
@@ -66,6 +69,7 @@ class Questions extends Component {
               data-testid={ `wrong-answer-${index}` }
               onClick={ this.handleClick }
               className={ clicked && 'wrong-answer' }
+              disabled={ disabled }
             >
               {answer}
             </button>
