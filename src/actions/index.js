@@ -6,6 +6,7 @@ export const GET_INFO = 'GET_INFO';
 export const GET_QUESTIONS = 'GET_QUESTIONS';
 export const ERROR_REQUEST = 'ERROR_REQUEST';
 export const CLICKED = 'CLICKED';
+export const TIMER = 'TIMER';
 
 export const getTokenSucess = (token) => ({
   type: GET_TOKEN,
@@ -34,6 +35,11 @@ export const getInfo = (name, email) => ({
 
 export const clicked = (payload) => ({
   type: CLICKED,
+  payload,
+});
+
+export const timer = (payload) => ({
+  type: TIMER,
   payload,
 });
 

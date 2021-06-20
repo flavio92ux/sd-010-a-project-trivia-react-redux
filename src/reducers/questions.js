@@ -2,12 +2,14 @@ import {
   GET_QUESTIONS,
   ERROR_REQUEST,
   CLICKED,
+  TIMER,
 } from '../actions/index';
 
 const INITIAL_STATE = {
   response_code: 0,
   results: [],
   click: false,
+  time: 30,
 };
 
 function login(state = INITIAL_STATE, action) {
@@ -27,6 +29,12 @@ function login(state = INITIAL_STATE, action) {
     return ({
       ...state,
       click: action.payload,
+    });
+  case TIMER:
+    return ({
+      ...state,
+      time: action.payload,
+
     });
   default:
     return state;

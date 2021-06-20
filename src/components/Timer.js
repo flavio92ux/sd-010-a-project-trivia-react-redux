@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { clicked } from '../actions';
+import { clicked, timer } from '../actions';
 
 class Timer extends Component {
   constructor() {
     super();
-    this.state = {
-      time: 30,
-    };
+
     this.timer = this.timer.bind(this);
   }
 
@@ -17,23 +15,21 @@ class Timer extends Component {
   }
 
   timer() {
-    const { clickedState } = this.props;
     const ONE_SECOND = 1000;
-    const timer = setInterval(() => {
-      const { time } = this.state;
+
+    const timeInterval = setInterval(() => {
+      const { clickedState, dispatchTime, time } = this.props;
       if (time > 0) {
-        this.setState({
-          time: time - 1,
-        });
+        dispatchTime(time - 1);
       } else {
         clickedState(true);
-        clearInterval(timer);
+        clearInterval(timeInterval);
       }
     }, ONE_SECOND);
   }
 
   render() {
-    const { time } = this.state;
+    const { time } = this.props;
     return (
       <p>{time}</p>
     );
@@ -42,10 +38,17 @@ class Timer extends Component {
 
 Timer.propTypes = {
   clickedState: PropTypes.func.isRequired,
+  time: PropTypes.number.isRequired,
+  dispatchTime: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = (state) => ({
+  time: state.questions.time,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   clickedState: (bool) => dispatch(clicked(bool)),
+  dispatchTime: (time) => dispatch(timer(time)),
 });
 
-export default connect(null, mapDispatchToProps)(Timer);
+export default connect(mapStateToProps, mapDispatchToProps)(Timer);
