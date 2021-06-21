@@ -15,14 +15,20 @@ class Questions extends Component {
     this.setLocalStorage = this.setLocalStorage.bind(this);
   }
 
+  componentDidUpdate() {
+    this.setLocalStorage();
+  }
+
   setLocalStorage() {
     const { name, matches, score, email } = this.props;
 
-    localStorage.setItem('state', {
-      name,
-      assertions: matches,
-      score,
-      gravatarEmail: email,
+    localStorage.state = JSON.stringify({
+      player: {
+        name,
+        assertions: matches,
+        score,
+        gravatarEmail: email,
+      },
     });
   }
 
@@ -45,8 +51,6 @@ class Questions extends Component {
       score = CONSTANT + (HARD * time);
     }
     dispatchScore(score);
-
-    this.setLocalStorage();
   }
 
   getQuestions() {
@@ -137,19 +141,19 @@ Questions.propTypes = {
   timerStop: PropTypes.func.isRequired,
   dispatchScore: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
-  score: PropTypes.number.isRequired,
   email: PropTypes.string.isRequired,
   matches: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   results: state.questions.results,
   click: state.questions.click,
   time: state.questions.time,
-  matches: state.questions.matches,
-  score: state.questions.score,
   name: state.login.name,
   email: state.login.email,
+  score: state.questions.score,
+  matches: state.questions.matches,
 });
 
 const mapDispatchToProps = (dispatch) => ({
