@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { clicked, setScore, stopTime } from '../actions';
+import { CLICKED, clicked, setScore, stopTime } from '../actions';
 
 class Questions extends Component {
   constructor() {
     super();
     this.state = {
       counter: 0,
+      sorted: false,
+      newAnswers: [],
     };
     this.getQuestions = this.getQuestions.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.sortAnsewrs = this.sortAnsewrs.bind(this);
     this.setLocalStorage = this.setLocalStorage.bind(this);
+    this.renderButton = this.renderButton.bind(this);
+    this.handleNext = this.handleNext.bind(this);
   }
 
   componentDidUpdate() {
@@ -28,8 +32,6 @@ class Questions extends Component {
         assertions: matches,
         score,
         gravatarEmail: email,
-        sorted: false,
-        newAnswers: [],
       },
     });
   }
@@ -92,6 +94,18 @@ class Questions extends Component {
     }
   }
 
+  handleNext() {
+    const { counter, sorted } = this.state;
+    const { clickedState } = this.props;
+
+    this.setState({
+      counter: counter + 1,
+      sorted: false,
+    });
+
+    clickedState(false);
+  }
+
   renderElements(newAnswers, object) {
     if (object.length === 0) return;
     const { click } = this.props;
@@ -135,10 +149,25 @@ class Questions extends Component {
     );
   }
 
+  renderButton() {
+    const { click } = this.props;
+    if (!click) return;
+    return (
+      <button
+        type="button"
+        data-testid="btn-next"
+        onClick={ this.handleNext }
+      >
+        Próxima
+      </button>
+    );
+  }
+
   render() {
     return (
       <main>
         { this.getQuestions() }
+        { this.renderButton() }
       </main>
     );
   }

@@ -11,7 +11,7 @@ const INITIAL_STATE = {
   response_code: 0,
   results: [],
   click: false,
-  time: 30,
+  time: 5,
   timeStop: false,
   score: 0,
   matches: 0,
