@@ -28,6 +28,8 @@ class Questions extends Component {
         assertions: matches,
         score,
         gravatarEmail: email,
+        sorted: false,
+        newAnswers: [],
       },
     });
   }
@@ -66,10 +68,19 @@ class Questions extends Component {
   }
 
   sortAnsewrs(answers, object) {
+    const { sorted, newAnswers } = this.state;
     const PARAM_1 = 0.5;
     const PARAM_2 = -1;
-    const newAnswers = answers.sort(() => (Math.random() > PARAM_1 ? 1 : PARAM_2));
-    return this.renderElements(newAnswers, object);
+    const arraySorted = answers.sort(() => (Math.random() > PARAM_1 ? 1 : PARAM_2));
+    if (!sorted) {
+      this.setState({
+        sorted: true,
+        newAnswers: arraySorted,
+      });
+    }
+
+    if (newAnswers) return this.renderElements(newAnswers, object);
+    return this.renderElements(arraySorted, object);
   }
 
   handleClick({ target }, difficulty) {
