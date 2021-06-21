@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router';
 import TelaJogo from './pages/TelaJogo';
 import Login from './pages/Login';
 import Settings from './pages/Settings';
+import Feedback from './pages/Feedback';
 
 class App extends Component {
   render() {
@@ -12,6 +13,7 @@ class App extends Component {
           <Route exact path="/" component={ Login } />
           <Route exact path="/tela-do-jogo" component={ TelaJogo } />
           <Route exact path="/settings" component={ Settings } />
+          <Route exact path="/feedback" component={ Feedback } />
         </Switch>
       </div>
     );

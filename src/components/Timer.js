@@ -17,13 +17,13 @@ class Timer extends Component {
   timer() {
     const ONE_SECOND = 1000;
 
-    const timeInterval = setInterval(() => {
+    setInterval(() => {
       const { clickedState, dispatchTime, time, stopTime } = this.props;
       if (time > 0 && !stopTime) {
         dispatchTime(time - 1);
       } else {
         clickedState(true);
-        clearInterval(timeInterval);
+        /* clearInterval(timeInterval); */
       }
     }, ONE_SECOND);
   }

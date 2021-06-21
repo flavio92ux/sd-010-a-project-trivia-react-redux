@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
-import { CLICKED, clicked, setScore, stopTime } from '../actions';
+import { clicked, setScore, stopTime, timer } from '../actions';
 
 class Questions extends Component {
   constructor() {
@@ -17,6 +18,10 @@ class Questions extends Component {
     this.setLocalStorage = this.setLocalStorage.bind(this);
     this.renderButton = this.renderButton.bind(this);
     this.handleNext = this.handleNext.bind(this);
+  }
+
+  componentDidMount() {
+    this.setLocalStorage();
   }
 
   componentDidUpdate() {
@@ -61,6 +66,11 @@ class Questions extends Component {
     const { results } = this.props;
     const { counter } = this.state;
     if (results.length !== 0) {
+      if (results.length === counter) {
+        return (
+          <Redirect to="/feedback" />
+        );
+      }
       const object = results[counter];
       const incorrectAnswers = object.incorrect_answers;
       const correctAnswers = object.correct_answer;
@@ -95,8 +105,9 @@ class Questions extends Component {
   }
 
   handleNext() {
-    const { counter, sorted } = this.state;
-    const { clickedState } = this.props;
+    const { counter } = this.state;
+    const { clickedState, timerStop, dispatchTime } = this.props;
+    const INITIAL_TIME = 30;
 
     this.setState({
       counter: counter + 1,
@@ -104,6 +115,8 @@ class Questions extends Component {
     });
 
     clickedState(false);
+    dispatchTime(INITIAL_TIME);
+    timerStop(false);
   }
 
   renderElements(newAnswers, object) {
@@ -184,6 +197,7 @@ Questions.propTypes = {
   email: PropTypes.string.isRequired,
   matches: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
+  dispatchTime: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -200,6 +214,7 @@ const mapDispatchToProps = (dispatch) => ({
   clickedState: (bool) => dispatch(clicked(bool)),
   timerStop: (bool) => dispatch(stopTime(bool)),
   dispatchScore: (score) => dispatch(setScore(score)),
+  dispatchTime: (time) => dispatch(timer(time)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions);
