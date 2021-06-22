@@ -9,20 +9,24 @@ class Feedback extends Component {
   constructor() {
     super();
     this.scoreOfPerson = this.scoreOfPerson.bind(this);
+    this.saveStorage = this.saveStorage.bind(this);
   }
 
-  componentDidMount() {
-    const { name, score, email } = this.props;
+  saveStorage() {
+    const { name, score, email, assertions } = this.props;
     const urlGravatar = `https://www.gravatar.com/avatar/${MD5(email).toString()}`;
     let ranking = JSON.parse(localStorage.getItem('ranking'));
     if (!ranking) ranking = [];
     const addRanking = {
+      assertions,
       name,
       score,
       picture: urlGravatar,
     };
 
     ranking.push(addRanking);
+
+    ranking.sort((a, b) => Number(b.score) - Number(a.score));
 
     localStorage.setItem('ranking', JSON.stringify(ranking));
   }
@@ -72,6 +76,7 @@ class Feedback extends Component {
         </Link>
         <Link to="ranking">
           <button
+            onClick={ this.saveStorage() }
             data-testid="btn-ranking"
             type="button"
           >
