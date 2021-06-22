@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
 
 class Feedback extends Component {
-  verifyAssertions() {
+  constructor() {
+    super();
+    this.scoreOfPerson = this.scoreOfPerson.bind(this);
+  }
+
+  feedbackMensage() {
     const { assertions } = this.props;
     const CUT_MATCHES = 3;
 
@@ -18,12 +24,43 @@ class Feedback extends Component {
     );
   }
 
+  scoreOfPerson() {
+    const { assertions, score } = this.props;
+
+    return (
+      <div>
+        <span>Placar Final: </span>
+        <span data-testid="feedback-total-score">{score}</span>
+        <br />
+        <span>Total de acertos: </span>
+        <span data-testid="feedback-total-question">{assertions}</span>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div>
         <Header />
         <h3 data-testid="feedback-text">Feedback</h3>
-        {this.verifyAssertions()}
+        {this.feedbackMensage()}
+        {this.scoreOfPerson()}
+        <Link to="/">
+          <button
+            data-testid="btn-play-again"
+            type="button"
+          >
+            Jogar Novamente
+          </button>
+        </Link>
+        <Link to="ranking">
+          <button
+            data-testid="btn-ranking"
+            type="button"
+          >
+            Ranking
+          </button>
+        </Link>
       </div>
     );
   }
@@ -31,10 +68,12 @@ class Feedback extends Component {
 
 Feedback.propTypes = {
   assertions: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   assertions: state.questions.matches,
+  score: state.questions.score,
 });
 
 export default connect(mapStateToProps)(Feedback);
