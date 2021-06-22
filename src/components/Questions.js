@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
-import { clicked, setScore, stopTime, timer } from '../actions';
+import { clicked, setScore, stopInterval, stopTime, timer } from '../actions';
 
 class Questions extends Component {
   constructor() {
@@ -63,10 +63,11 @@ class Questions extends Component {
   }
 
   getQuestions() {
-    const { results } = this.props;
+    const { results, sendStopInterval } = this.props;
     const { counter } = this.state;
     if (results.length !== 0) {
       if (results.length === counter) {
+        sendStopInterval(true);
         return (
           <Redirect to="/feedback" />
         );
@@ -198,6 +199,7 @@ Questions.propTypes = {
   matches: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
   dispatchTime: PropTypes.func.isRequired,
+  sendStopInterval: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -208,6 +210,7 @@ const mapStateToProps = (state) => ({
   email: state.login.email,
   score: state.questions.score,
   matches: state.questions.matches,
+  stopInterval: state.questions.stopInterval,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -215,6 +218,7 @@ const mapDispatchToProps = (dispatch) => ({
   timerStop: (bool) => dispatch(stopTime(bool)),
   dispatchScore: (score) => dispatch(setScore(score)),
   dispatchTime: (time) => dispatch(timer(time)),
+  sendStopInterval: (bool) => dispatch(stopInterval(bool)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions);

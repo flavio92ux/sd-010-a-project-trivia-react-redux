@@ -17,13 +17,14 @@ class Timer extends Component {
   timer() {
     const ONE_SECOND = 1000;
 
-    setInterval(() => {
-      const { clickedState, dispatchTime, time, stopTime } = this.props;
-      if (time > 0 && !stopTime) {
+    const timerInterval = setInterval(() => {
+      const { clickedState, dispatchTime, time, stopInterval, stopTime } = this.props;
+      if (stopInterval) {
+        clearInterval(timerInterval);
+      } else if (time > 0 && !stopTime) {
         dispatchTime(time - 1);
       } else {
         clickedState(true);
-        /* clearInterval(timeInterval); */
       }
     }, ONE_SECOND);
   }
@@ -41,11 +42,13 @@ Timer.propTypes = {
   time: PropTypes.number.isRequired,
   dispatchTime: PropTypes.func.isRequired,
   stopTime: PropTypes.bool.isRequired,
+  stopInterval: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   time: state.questions.time,
   stopTime: state.questions.timeStop,
+  stopInterval: state.questions.stopInterval,
 });
 
 const mapDispatchToProps = (dispatch) => ({

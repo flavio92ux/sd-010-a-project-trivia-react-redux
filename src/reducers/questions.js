@@ -5,6 +5,7 @@ import {
   TIMER,
   STOP_TIME,
   SET_SCORE,
+  STOP_INTERVAL,
 } from '../actions/index';
 
 const INITIAL_STATE = {
@@ -15,6 +16,7 @@ const INITIAL_STATE = {
   timeStop: false,
   score: 0,
   matches: 0,
+  stopInterval: false,
 };
 
 function login(state = INITIAL_STATE, action) {
@@ -51,6 +53,12 @@ function login(state = INITIAL_STATE, action) {
       ...state,
       score: state.score + action.score,
       matches: state.matches + 1,
+    });
+  case STOP_INTERVAL:
+    return ({
+      ...state,
+      stopInterval: action.bool,
+
     });
   default:
     return state;

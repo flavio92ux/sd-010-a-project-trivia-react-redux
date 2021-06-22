@@ -9,6 +9,7 @@ export const CLICKED = 'CLICKED';
 export const TIMER = 'TIMER';
 export const STOP_TIME = 'STOP_TIME';
 export const SET_SCORE = 'SET_SCORE';
+export const STOP_INTERVAL = 'STOP_INTERVAL';
 
 export const getTokenSucess = (token) => ({
   type: GET_TOKEN,
@@ -53,6 +54,11 @@ export const stopTime = (payload) => ({
 export const setScore = (score) => ({
   type: SET_SCORE,
   score,
+});
+
+export const stopInterval = (bool) => ({
+  type: STOP_INTERVAL,
+  bool,
 });
 
 export const getTokenThunk = () => (dispatch) => {
